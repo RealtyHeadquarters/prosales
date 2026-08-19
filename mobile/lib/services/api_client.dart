@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config/api_config.dart';
 
@@ -66,6 +67,17 @@ class ApiClient {
     return _decode(res);
   }
 
+  // Map a file path's extension to an image MIME type (default jpeg) so the
+  // server never sees "application/octet-stream" for a photo.
+  MediaType _imageType(String filePath) {
+    final ext = filePath.contains('.') ? filePath.split('.').last.toLowerCase() : '';
+    const map = {
+      'jpg': 'jpeg', 'jpeg': 'jpeg', 'png': 'png', 'gif': 'gif',
+      'webp': 'webp', 'heic': 'heic', 'heif': 'heif', 'bmp': 'bmp',
+    };
+    return MediaType('image', map[ext] ?? 'jpeg');
+  }
+
   /// Multipart upload for visit photos (field name: "photos").
   Future<dynamic> uploadPhotos(String path, List<String> filePaths, {double? lat, double? lng}) async {
     final req = http.MultipartRequest('POST', _uri(path));
@@ -73,7 +85,7 @@ class ApiClient {
     if (lat != null) req.fields['lat'] = '$lat';
     if (lng != null) req.fields['lng'] = '$lng';
     for (final p in filePaths) {
-      req.files.add(await http.MultipartFile.fromPath('photos', p));
+      req.files.add(await http.MultipartFile.fromPath('photos', p, contentType: _imageType(p)));
     }
     final res = await http.Response.fromStream(await req.send());
     return _decode(res);
