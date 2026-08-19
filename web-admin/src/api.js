@@ -1,5 +1,11 @@
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
+// Backend origin (without /api) — used to build photo URLs like `${API_ORIGIN}/uploads/x.jpg`.
+export const API_ORIGIN = BASE.replace(/\/api\/?$/, '');
+
+// Resolve a stored photo path to a full URL (handles both local /uploads and full https URLs).
+export const photoUrl = (filePath) => (/^https?:\/\//.test(filePath) ? filePath : API_ORIGIN + filePath);
+
 export class ApiError extends Error {
   constructor(status, message, data) {
     super(message);

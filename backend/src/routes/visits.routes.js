@@ -129,7 +129,8 @@ router.post('/:id/photos', authenticate, upload.array('photos', 10), asyncHandle
   const { lat, lng } = req.body;
   const saved = [];
   for (const f of files) {
-    const filePath = `/uploads/${f.filename}`;
+    // Cloudinary sets f.path to a full https URL; disk storage uses the local filename.
+    const filePath = /^https?:\/\//.test(f.path || '') ? f.path : `/uploads/${f.filename}`;
     const { rows } = await query(
       `INSERT INTO visit_photos (visit_id, file_path, lat, lng)
        VALUES ($1, $2, $3, $4) RETURNING *`,

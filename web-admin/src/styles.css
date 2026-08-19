@@ -98,3 +98,18 @@ button:disabled { opacity: 0.6; cursor: default; }
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: grid; place-items: center; z-index: 1000; }
 .modal { background: #fff; border-radius: 16px; padding: 24px; width: 360px; display: flex; flex-direction: column; gap: 10px; }
 .modal h3 { margin: 0 0 6px; }
+.modal.wide { width: min(680px, 92vw); max-height: 82vh; overflow: auto; }
+
+/* Clickable rows */
+.table tr.clickable { cursor: pointer; }
+.table tr.clickable:hover td { background: #f7f9fc; }
+
+/* Client meetings + photos */
+.visit-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+.visit-item { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.visit-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.visit-notes { margin: 6px 0; }
+.photo-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.photo-grid img { width: 84px; height: 84px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid var(--line); background: #f0f0f0; }
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: grid; place-items: center; z-index: 2000; cursor: zoom-out; }
+.lightbox img { max-width: 92vw; max-height: 92vh; border-radius: 8px; }

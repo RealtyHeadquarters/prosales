@@ -17,6 +17,9 @@ services:
         generateValue: true
       - key: CORS_ORIGIN       # set to the dashboard URL once known (or * to start)
         sync: false
+      # Optional: add CLOUDINARY_URL in the Render dashboard (Environment tab) for
+      # durable photo storage — cloudinary://<key>:<secret>@<cloud>. Left out here so
+      # blueprint auto-sync isn't blocked waiting for a value.
       - key: NODE_VERSION
         value: "20"
 
