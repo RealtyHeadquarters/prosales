@@ -1,0 +1,79 @@
+:root {
+  --blue: #2563eb;
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --line: #e6e8eb;
+  --text: #1f2430;
+  --muted: #7a8290;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.fullcenter { display: grid; place-items: center; height: 100vh; color: var(--muted); }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 230px 1fr; min-height: 100vh; }
+.sidebar { background: #0f172a; color: #cbd5e1; padding: 20px 12px; }
+.brand { font-size: 20px; font-weight: 700; color: #fff; padding: 8px 12px 20px; }
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px; color: #cbd5e1; text-decoration: none; font-size: 14px;
+}
+.sidebar nav a:hover { background: #1e293b; }
+.sidebar nav a.active { background: var(--blue); color: #fff; }
+.main { display: flex; flex-direction: column; }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; background: var(--card); border-bottom: 1px solid var(--line); }
+.user { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.user .role { font-size: 11px; color: var(--muted); text-transform: uppercase; background: #eef2f7; padding: 2px 8px; border-radius: 20px; }
+.content { padding: 24px; }
+
+/* Page */
+.page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.page-head h2 { margin: 0; }
+.muted { color: var(--muted); font-size: 13px; }
+.row { display: flex; gap: 8px; align-items: center; }
+.row.end { justify-content: flex-end; margin-top: 12px; }
+
+/* Card / map */
+.card, .map-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.map-card { padding: 6px; }
+
+/* Table */
+.table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.table th, .table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.table th { background: #fafbfc; color: var(--muted); font-weight: 600; }
+.table tr:last-child td { border-bottom: none; }
+
+/* Inputs / buttons */
+input, select { padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; background: #fff; }
+button { padding: 9px 14px; border: 1px solid var(--line); background: #fff; border-radius: 10px; cursor: pointer; font-size: 14px; }
+button:hover { background: #f2f4f7; }
+button.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+button.primary:hover { opacity: 0.92; }
+button:disabled { opacity: 0.6; cursor: default; }
+
+/* Chips */
+.chip { font-size: 11px; padding: 3px 10px; border-radius: 20px; color: #fff; text-transform: capitalize; }
+.chip.lead { background: #64748b; }
+.chip.active { background: #16a34a; }
+.chip.converted { background: #0d9488; }
+.chip.inactive { background: #94a3b8; }
+
+/* Login */
+.login-wrap { display: grid; place-items: center; height: 100vh; }
+.login-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 32px; width: 340px; display: flex; flex-direction: column; gap: 12px; text-align: center; }
+.login-card h1 { margin: 0; }
+.login-logo { font-size: 44px; }
+.login-card input { text-align: left; }
+.login-card button { background: var(--blue); color: #fff; border-color: var(--blue); margin-top: 6px; }
+.error { color: #dc2626; font-size: 13px; }
+
+/* Modal */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: grid; place-items: center; z-index: 1000; }
+.modal { background: #fff; border-radius: 16px; padding: 24px; width: 360px; display: flex; flex-direction: column; gap: 10px; }
+.modal h3 { margin: 0 0 6px; }
