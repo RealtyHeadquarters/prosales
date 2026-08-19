@@ -20,6 +20,9 @@ class _HomeTabState extends State<HomeTab> {
   final _api = ApiClient.instance;
   Attendance? _today;
   List<Task> _agenda = [];
+  int _visitsToday = 0;
+  int _pendingTasks = 0;
+  int _clients = 0;
   bool _loading = true;
   bool _busy = false;
 
@@ -34,8 +37,14 @@ class _HomeTabState extends State<HomeTab> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
-      final att = await _api.get('/attendance/me');
-      final list = (att['attendance'] as List).map((e) => Attendance.fromJson(e)).toList();
+      final res = await Future.wait([
+        _api.get('/attendance/me'),
+        _api.get('/tasks/agenda', query: {'date': _todayStr}),
+        _api.get('/visits'),
+        _api.get('/tasks', query: {'status': 'pending'}),
+        _api.get('/clients'),
+      ]);
+      final list = (res[0]['attendance'] as List).map((e) => Attendance.fromJson(e)).toList();
       Attendance? today;
       for (final a in list) {
         if (a.workDate == _todayStr) {
@@ -43,11 +52,14 @@ class _HomeTabState extends State<HomeTab> {
           break;
         }
       }
-      final agenda = await _api.get('/tasks/agenda', query: {'date': _todayStr});
+      final visits = res[2]['visits'] as List;
       if (!mounted) return;
       setState(() {
         _today = today;
-        _agenda = (agenda['tasks'] as List).map((e) => Task.fromJson(e)).toList();
+        _agenda = (res[1]['tasks'] as List).map((e) => Task.fromJson(e)).toList();
+        _visitsToday = visits.where((v) => (v['created_at'] ?? '').toString().startsWith(_todayStr)).length;
+        _pendingTasks = (res[3]['tasks'] as List).length;
+        _clients = (res[4]['clients'] as List).length;
       });
       // Resume tracking if the rep is checked in but not yet out.
       if (today?.checkedIn == true && today?.checkedOut != true) {
@@ -93,6 +105,8 @@ class _HomeTabState extends State<HomeTab> {
                 children: [
                   _attendanceCard(),
                   const SizedBox(height: 16),
+                  _statsRow(),
+                  const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
@@ -110,6 +124,36 @@ class _HomeTabState extends State<HomeTab> {
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _statsRow() {
+    return Row(
+      children: [
+        _statCard('Visits today', '$_visitsToday', Icons.place, Colors.blue),
+        const SizedBox(width: 10),
+        _statCard('Pending tasks', '$_pendingTasks', Icons.checklist, Colors.orange),
+        const SizedBox(width: 10),
+        _statCard('My clients', '$_clients', Icons.people, Colors.teal),
+      ],
+    );
+  }
+
+  Widget _statCard(String label, String value, IconData icon, Color color) {
+    return Expanded(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+          child: Column(
+            children: [
+              Icon(icon, color: color, size: 22),
+              const SizedBox(height: 6),
+              Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade600), textAlign: TextAlign.center),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
